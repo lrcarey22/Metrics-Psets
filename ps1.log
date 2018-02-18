@@ -1,0 +1,993 @@
+-----------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  \\files\ak29\ClusterDownloads\Econometrics\ps1.log
+  log type:  text
+ opened on:  17 Feb 2018, 17:16:59
+
+. local data 
+
+. use project_star_ps1.dta, clear
+
+. 
+. ********************************************************************************
+. **                                   P1                                       **
+. ********************************************************************************
+. //summarie all variables in the data//
+. sum
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        ssex |      6,325    1.486166    .4998481          1          2
+       srace |      6,322    1.349257    .5676566          1          6
+        sesk |      6,301    1.515632    .4997952          1          2
+    tcombssk |      5,786    922.3287     73.7466        635       1253
+    treadssk |      5,789    436.7253    31.70626        315        627
+-------------+---------------------------------------------------------
+    tmathssk |      5,871    485.3771    47.69788        288        626
+     cltypek |      6,325    2.052332    .8065276          1          3
+     classid |      6,325    11800.78     6784.35        100      23600
+       hdegk |      6,304    2.385787    .5735962          2          5
+     totexpk |      6,304    9.258249    5.808783          0         27
+-------------+---------------------------------------------------------
+      tracek |      6,263    1.164618    .3708647          1          2
+    schtypek |      6,325     2.41502    .9349133          1          4
+
+. 
+. sum, det
+
+                    student sex   (1m2f)
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            1              1
+ 5%            1              1
+10%            1              1       Obs               6,325
+25%            1              1       Sum of Wgt.       6,325
+
+50%            1                      Mean           1.486166
+                        Largest       Std. Dev.      .4998481
+75%            2              2
+90%            2              2       Variance       .2498481
+95%            2              2       Skewness       .0553572
+99%            2              2       Kurtosis       1.003064
+
+                    student race (1w2b6o)
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            1              1
+ 5%            1              1
+10%            1              1       Obs               6,322
+25%            1              1       Sum of Wgt.       6,322
+
+50%            1                      Mean           1.349257
+                        Largest       Std. Dev.      .5676566
+75%            2              6
+90%            2              6       Variance       .3222341
+95%            2              6       Skewness       2.944748
+99%            2              6       Kurtosis       22.04542
+
+            socio-economic status in kindergarten
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            1              1
+ 5%            1              1
+10%            1              1       Obs               6,301
+25%            1              1       Sum of Wgt.       6,301
+
+50%            2                      Mean           1.515632
+                        Largest       Std. Dev.      .4997952
+75%            2              2
+90%            2              2       Variance       .2497953
+95%            2              2       Skewness      -.0625603
+99%            2              2       Kurtosis       1.003914
+
+                    total combined score
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%          783            635
+ 5%          816            680
+10%          836            711       Obs               5,786
+25%          870            719       Sum of Wgt.       5,786
+
+50%          915                      Mean           922.3287
+                        Largest       Std. Dev.       73.7466
+75%          964           1231
+90%         1019           1253       Variance       5438.561
+95%         1058           1253       Skewness       .6301511
+99%         1136           1253       Kurtosis       3.745125
+
+       total reading scaled score - sesat ii stanford
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%          384            315
+ 5%          395            346
+10%          402            358       Obs               5,789
+25%          414            358       Sum of Wgt.       5,789
+
+50%          433                      Mean           436.7253
+                        Largest       Std. Dev.      31.70626
+75%          453            627
+90%          474            627       Variance       1005.287
+95%          492            627       Skewness       1.340654
+99%          545            627       Kurtosis       6.848114
+
+         total math scaled score - sesat ii stanford
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%          392            288
+ 5%          418            320
+10%          429            320       Obs               5,871
+25%          454            339       Sum of Wgt.       5,871
+
+50%          484                      Mean           485.3771
+                        Largest       Std. Dev.      47.69788
+75%          513            626
+90%          547            626       Variance       2275.088
+95%          576            626       Skewness       .4624982
+99%          626            626       Kurtosis       3.347445
+
+          classroom type  (1s2r3ra) in kindergarten
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            1              1
+ 5%            1              1
+10%            1              1       Obs               6,325
+25%            1              1       Sum of Wgt.       6,325
+
+50%            2                      Mean           2.052332
+                        Largest       Std. Dev.      .8065276
+75%            3              3
+90%            3              3       Variance       .6504867
+95%            3              3       Skewness      -.0951724
+99%            3              3       Kurtosis       1.543448
+
+                    kindergarten class id
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%          300            100
+ 5%         1400            100
+10%         2400            100       Obs               6,325
+25%         6100            100       Sum of Wgt.       6,325
+
+50%        11441                      Mean           11800.78
+                        Largest       Std. Dev.       6784.35
+75%        17768          23600
+90%        21383          23600       Variance       4.60e+07
+95%        22377          23600       Skewness       .0438547
+99%        23300          23600       Kurtosis       1.782688
+
+        highest degree (tch) of kindergarten teacher
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            2              2
+ 5%            2              2
+10%            2              2       Obs               6,304
+25%            2              2       Sum of Wgt.       6,304
+
+50%            2                      Mean           2.385787
+                        Largest       Std. Dev.      .5735962
+75%            3              5
+90%            3              5       Variance       .3290126
+95%            3              5       Skewness       1.402331
+99%            4              5       Kurtosis       5.093359
+
+      years of total teaching experience - kindergarten
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            0              0
+ 5%            1              0
+10%            2              0       Obs               6,304
+25%            5              0       Sum of Wgt.       6,304
+
+50%            9                      Mean           9.258249
+                        Largest       Std. Dev.      5.808783
+75%           13             27
+90%           17             27       Variance       33.74196
+95%           20             27       Skewness       .4147662
+99%           24             27       Kurtosis       2.752395
+
+        teacher race  (1w2b3a4h5i6o) in kindergarten
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            1              1
+ 5%            1              1
+10%            1              1       Obs               6,263
+25%            1              1       Sum of Wgt.       6,263
+
+50%            1                      Mean           1.164618
+                        Largest       Std. Dev.      .3708647
+75%            1              2
+90%            2              2       Variance       .1375406
+95%            2              2       Skewness       1.808796
+99%            2              2       Kurtosis       4.271741
+
+          school type - (1i2s3r4u) in kindergarten
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            1              1
+ 5%            1              1
+10%            1              1       Obs               6,325
+25%            2              1       Sum of Wgt.       6,325
+
+50%            3                      Mean            2.41502
+                        Largest       Std. Dev.      .9349133
+75%            3              4
+90%            3              4       Variance       .8740628
+95%            4              4       Skewness      -.2518272
+99%            4              4       Kurtosis       2.006577
+
+. 
+. *output table
+. qui estpost sum
+
+. esttab using sum.tex, cells("count mean sd min max") booktabs replace
+(output written to sum.tex)
+
+. 
+. 
+. 
+. //examine specific variables of interest//
+. foreach var of varlist ssex srace sesk cltypek hdegk totexpk tracek schtypek {
+  2. tab `var'
+  3. }
+
+student sex |
+     (1m2f) |      Freq.     Percent        Cum.
+------------+-----------------------------------
+       male |      3,250       51.38       51.38
+     female |      3,075       48.62      100.00
+------------+-----------------------------------
+      Total |      6,325      100.00
+
+    student |
+       race |
+   (1w2b6o) |      Freq.     Percent        Cum.
+------------+-----------------------------------
+      white |      4,234       66.97       66.97
+      black |      2,058       32.55       99.53
+      other |         30        0.47      100.00
+------------+-----------------------------------
+      Total |      6,322      100.00
+
+socio-economic |
+     status in |
+  kindergarten |      Freq.     Percent        Cum.
+---------------+-----------------------------------
+    free lunch |      3,052       48.44       48.44
+non-free lunch |      3,249       51.56      100.00
+---------------+-----------------------------------
+         Total |      6,301      100.00
+
+      classroom type |
+        (1s2r3ra) in |
+        kindergarten |      Freq.     Percent        Cum.
+---------------------+-----------------------------------
+         small class |      1,900       30.04       30.04
+       regular class |      2,194       34.69       64.73
+regular + aide class |      2,231       35.27      100.00
+---------------------+-----------------------------------
+               Total |      6,325      100.00
+
+    highest |
+     degree |
+   (tch) of |
+kindergarte |
+  n teacher |      Freq.     Percent        Cum.
+------------+-----------------------------------
+  bachelors |      4,119       65.34       65.34
+    masters |      1,981       31.42       96.76
+  master +  |        161        2.55       99.32
+ specialist |         43        0.68      100.00
+------------+-----------------------------------
+      Total |      6,304      100.00
+
+    years of total |
+          teaching |
+      experience - |
+      kindergarten |      Freq.     Percent        Cum.
+-------------------+-----------------------------------
+first year teacher |        302        4.79        4.79
+                 1 |        312        4.95        9.74
+                 2 |        268        4.25       13.99
+                 3 |        374        5.93       19.92
+                 4 |        209        3.32       23.24
+                 5 |        399        6.33       29.57
+                 6 |        445        7.06       36.63
+                 7 |        187        2.97       39.59
+                 8 |        512        8.12       47.72
+                 9 |        236        3.74       51.46
+                10 |        351        5.57       57.03
+                11 |        414        6.57       63.59
+                12 |        523        8.30       71.89
+                13 |        495        7.85       79.74
+                14 |        229        3.63       83.38
+                15 |        224        3.55       86.93
+                16 |        143        2.27       89.20
+                17 |        154        2.44       91.64
+                18 |         58        0.92       92.56
+                19 |         55        0.87       93.43
+                20 |        144        2.28       95.72
+                21 |        103        1.63       97.35
+                22 |         64        1.02       98.37
+                24 |         68        1.08       99.44
+                27 |         35        0.56      100.00
+-------------------+-----------------------------------
+             Total |      6,304      100.00
+
+    teacher |
+       race |
+(1w2b3a4h5i |
+     6o) in |
+kindergarte |
+          n |      Freq.     Percent        Cum.
+------------+-----------------------------------
+      white |      5,232       83.54       83.54
+      black |      1,031       16.46      100.00
+------------+-----------------------------------
+      Total |      6,263      100.00
+
+  school type - |
+  (1i2s3r4u) in |
+   kindergarten |      Freq.     Percent        Cum.
+----------------+-----------------------------------
+     inner-city |      1,428       22.58       22.58
+suburban school |      1,412       22.32       44.90
+   rural school |      2,917       46.12       91.02
+   urban school |        568        8.98      100.00
+----------------+-----------------------------------
+          Total |      6,325      100.00
+
+. 
+. 
+. 
+. //examine distribution of variables//
+. foreach var of varlist tcombssk treadssk tmathssk {
+  2. hist `var', freq normal
+  3. graph export "`var'_hist.png", as(png) replace
+  4. }
+(bin=37, start=635, width=16.702703)
+(file tcombssk_hist.png written in PNG format)
+(bin=37, start=315, width=8.4324324)
+(file treadssk_hist.png written in PNG format)
+(bin=37, start=288, width=9.1351351)
+(file tmathssk_hist.png written in PNG format)
+
+. 
+. ********************************************************************************
+. **                                   P2                                       **
+. ********************************************************************************
+. //do crosstabs of classroom size and baseline student characteristics//
+. **code**
+. foreach var of varlist ssex srace sesk {
+  2. tab cltyp `var', row chi2 
+  3. }
+
++----------------+
+| Key            |
+|----------------|
+|   frequency    |
+| row percentage |
++----------------+
+
+      classroom type |
+        (1s2r3ra) in | student sex   (1m2f)
+        kindergarten |      male     female |     Total
+---------------------+----------------------+----------
+         small class |       977        923 |     1,900 
+                     |     51.42      48.58 |    100.00 
+---------------------+----------------------+----------
+       regular class |     1,119      1,075 |     2,194 
+                     |     51.00      49.00 |    100.00 
+---------------------+----------------------+----------
+regular + aide class |     1,154      1,077 |     2,231 
+                     |     51.73      48.27 |    100.00 
+---------------------+----------------------+----------
+               Total |     3,250      3,075 |     6,325 
+                     |     51.38      48.62 |    100.00 
+
+          Pearson chi2(2) =   0.2330   Pr = 0.890
+
++----------------+
+| Key            |
+|----------------|
+|   frequency    |
+| row percentage |
++----------------+
+
+      classroom type |
+        (1s2r3ra) in |      student race (1w2b6o)
+        kindergarten |     white      black      other |     Total
+---------------------+---------------------------------+----------
+         small class |     1,294        593         12 |     1,899 
+                     |     68.14      31.23       0.63 |    100.00 
+---------------------+---------------------------------+----------
+       regular class |     1,472        710         10 |     2,192 
+                     |     67.15      32.39       0.46 |    100.00 
+---------------------+---------------------------------+----------
+regular + aide class |     1,468        755          8 |     2,231 
+                     |     65.80      33.84       0.36 |    100.00 
+---------------------+---------------------------------+----------
+               Total |     4,234      2,058         30 |     6,322 
+                     |     66.97      32.55       0.47 |    100.00 
+
+          Pearson chi2(4) =   4.6757   Pr = 0.322
+
++----------------+
+| Key            |
+|----------------|
+|   frequency    |
+| row percentage |
++----------------+
+
+      classroom type | socio-economic status
+        (1s2r3ra) in |    in kindergarten
+        kindergarten | free lunc  non-free  |     Total
+---------------------+----------------------+----------
+         small class |       891      1,001 |     1,892 
+                     |     47.09      52.91 |    100.00 
+---------------------+----------------------+----------
+       regular class |     1,044      1,143 |     2,187 
+                     |     47.74      52.26 |    100.00 
+---------------------+----------------------+----------
+regular + aide class |     1,117      1,105 |     2,222 
+                     |     50.27      49.73 |    100.00 
+---------------------+----------------------+----------
+               Total |     3,052      3,249 |     6,301 
+                     |     48.44      51.56 |    100.00 
+
+          Pearson chi2(2) =   4.7871   Pr = 0.091
+
+. 
+. *output tables
+. qui tabout cltypek ssex using test.txt, ///
+> c(freq row) stats(chi2) ///
+> style(tex) bt cl1(2-7) cl2(2-3 4-5 6-7) replace 
+
+. 
+. ********************************************************************************
+. **                                   P3 & 4                                   **
+. ********************************************************************************
+. //compare mean math scores in small and regular (+ aid) classes//
+. 
+. 
+. estpost tabstat tmathssk , by(cltypek ) statistics(mean sd n) columns(statistics)
+
+Summary statistics: mean sd count
+     for variables: tmathssk
+  by categories of: cltypek
+
+     cltypek |   e(mean)      e(sd)   e(count) 
+-------------+---------------------------------
+ small_class |  490.9313   49.51013       1762 
+regular_cl~s |  483.1993   47.63593       2032 
+regular_+_~s |  482.7959   45.78352       2077 
+-------------+---------------------------------
+       Total |  485.3771   47.69788       5871 
+
+. 
+. *output table
+. esttab using means.tex, cells("mean sd n") replace
+(output written to means.tex)
+
+. 
+. /*calculate t statistic by hand (why??)//
+> --------------------------------------------------------------------------------
+> t = (Xbar_1 - Xbar_2) / sqrt[ds1/n1 + sd2/n2]
+> ------------------------------------------------------------------------------*/
+. ereturn list
+
+scalars:
+                  e(N) =  5871
+
+macros:
+                e(cmd) : "estpost"
+             e(subcmd) : "tabstat"
+              e(stats) : "mean sd count"
+               e(vars) : "tmathssk"
+              e(byvar) : "cltypek"
+
+matrices:
+               e(mean) :  1 x 4
+                 e(sd) :  1 x 4
+              e(count) :  1 x 4
+
+. matrix means = e(mean)
+
+. matrix sds = e(sd)
+
+. matrix counts = e(count)
+
+. 
+. *difference between math scores in small and regular classes
+. di (means[1,1]-means[1,2]) / sqrt(((sds[1,1]^2)/counts[1,1])+ ///
+> ((sds[1,2]^2)/counts[1,2]))
+4.8824489
+
+. 
+. 
+. *difference between math scores in small and regual+aid classes
+. di (means[1,1]-means[1,3]) / sqrt(((sds[1,1]^2)/counts[1,1])+ ///
+> ((sds[1,3]^2)/counts[1,3]))
+5.2509987
+
+. 
+. //calculate t statistic using ttest//
+. *create groupings for small classes and regular (+ aid) classes
+. gen small_reg = cltypek
+
+. gen small_reg_a = cltypek
+
+. 
+. label values small_reg   cltypek
+
+. label values small_reg_a cltypek
+
+. 
+. replace small_reg =   . if small_reg == 3
+(2,231 real changes made, 2,231 to missing)
+
+. replace small_reg_a = . if small_reg == 2
+(2,194 real changes made, 2,194 to missing)
+
+. 
+. *perform t test
+. ttest tmathssk, by(small_reg)
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+small cl |   1,762    490.9313    1.179481    49.51013     488.618    493.2447
+ regular |   2,032    483.1993    1.056751    47.63593    481.1269    485.2717
+---------+--------------------------------------------------------------------
+combined |   3,794    486.7902    .7900257    48.66199    485.2413    488.3391
+---------+--------------------------------------------------------------------
+    diff |            7.732017    1.579293                4.635671    10.82836
+------------------------------------------------------------------------------
+    diff = mean(small cl) - mean(regular)                         t =   4.8959
+Ho: diff = 0                                     degrees of freedom =     3792
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 1.0000         Pr(|T| > |t|) = 0.0000          Pr(T > t) = 0.0000
+
+. ttest tmathssk, by(small_reg_a)
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+small cl |   1,762    490.9313    1.179481    49.51013     488.618    493.2447
+ regular |   2,077    482.7959    1.004595    45.78352    480.8257     484.766
+---------+--------------------------------------------------------------------
+combined |   3,839    486.5298    .7698008     47.6966    485.0206    488.0391
+---------+--------------------------------------------------------------------
+    diff |            8.135469     1.53942                 5.11731    11.15363
+------------------------------------------------------------------------------
+    diff = mean(small cl) - mean(regular)                         t =   5.2848
+Ho: diff = 0                                     degrees of freedom =     3837
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 1.0000         Pr(|T| > |t|) = 0.0000          Pr(T > t) = 0.0000
+
+. 
+. *output tables
+. estpost ttest tmathssk, by(small_reg)
+
+             |      e(b)   e(count)      e(se)       e(t)    e(df_t)     e(p_l)       e(p) 
+-------------+-----------------------------------------------------------------------------
+    tmathssk |  7.732017       3794   1.579293   4.895873       3792   .9999995   1.02e-06 
+
+             |    e(p_u)     e(N_1)    e(mu_1)     e(N_2)    e(mu_2) 
+-------------+-------------------------------------------------------
+    tmathssk |  5.10e-07       1762   490.9313       2032   483.1993 
+
+. esttab using ttest_1.tex, c(mu_1 mu_2 t p)  label replace
+(output written to ttest_1.tex)
+
+. 
+. estpost ttest tmathssk, by(small_reg_a)
+
+             |      e(b)   e(count)      e(se)       e(t)    e(df_t)     e(p_l)       e(p) 
+-------------+-----------------------------------------------------------------------------
+    tmathssk |  8.135469       3839    1.53942   5.284763       3837   .9999999   1.33e-07 
+
+             |    e(p_u)     e(N_1)    e(mu_1)     e(N_2)    e(mu_2) 
+-------------+-------------------------------------------------------
+    tmathssk |  6.64e-08       1762   490.9313       2077   482.7959 
+
+. esttab using ttest_2.tex, c(mu_1 mu_2 t p)  label replace
+(output written to ttest_2.tex)
+
+. 
+. ********************************************************************************
+. **                                   P5                                       **
+. ********************************************************************************
+. //Estimate effect size by student background characteristic//
+. 
+. 
+. *make race a dummy
+. replace srace = . if srace == 6
+(30 real changes made, 30 to missing)
+
+. 
+. *generate an urban rural variable
+. gen rural = schtypek
+
+. replace rural = 1 if rural != 3
+(1,980 real changes made)
+
+. replace rural = 2 if rural == 3
+(2,917 real changes made)
+
+. label define urb 1 "non-rural" 2 "rural"
+
+. label values rural urb
+
+. 
+. *****Begin Loop Through Student Characteristic Variables************************
+. 
+. local testscore tcombssk
+
+. 
+. foreach var of varlist rural srace sesk {
+  2. 
+.         *test effect for white students
+.         ttest `testscore' if `var'==1, by(small_reg)
+  3. 
+.         *store difference and standard deviation
+.         local sd_1 r(sd)
+  4.         local x_bar_1 (r(mu_1) - r(mu_2))
+  5.         local n_1 r(N_1)+r(N_2)
+  6. 
+. 
+. 
+.         *test effect for black students
+.         ttest `testscore' if `var'==2, by(small_reg)
+  7. 
+.         *store difference and standard deviation
+.         local sd_2 r(sd)
+  8.         local x_bar_2 (r(mu_1) - r(mu_2))
+  9.         local n_2 r(N_1)+r(N_2)
+ 10. 
+. 
+. 
+. 
+.         /*/estimate difference in means//
+>         ----------------------------------------------------------------------------
+>         T score  estimated as:                          x_bar-1 - x_bar_2 
+>                                                                                            --
+> ------------------------
+>                                                                                            sq
+> rt(sd_1^2/n_1 + sd_2^2/n_2)                                                        
+>         --------------------------------------------------------------------------*/
+. 
+.         local sigma_p sqrt(((`n_1'-1)*(`sd_1'^2) + (`n_2'-1)*(`sd_1'^2)) /(`n_1'+`n_2'-2))
+ 11. 
+.         local tscore (`x_bar_1' - `x_bar_2') / sqrt((`sd_1'^2)/`n_1'+(`sd_2'^2)/`n_2')
+ 12. 
+.         di "P score for the differene in class size effect across `var'"
+ 13.         di 2*ttail(2,`tscore')
+ 14. 
+.         *output tables
+.         estpost ttest `testscore' if `var'==1, by(small_reg)
+ 15.         esttab using ttest_`var'_1.tex, c(mu_1 mu_2 t p)  label replace
+ 16.         estpost ttest `testscore' if `var'==2, by(small_reg)
+ 17.         esttab using ttest_`var'_2.tex, c(mu_1 mu_2 t p) label replace
+ 18. 
+.         
+. }
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+small cl |     934    929.0974    2.480422    75.80522    924.2296    933.9653
+ regular |   1,003    914.5912    2.336223    73.98859    910.0068    919.1757
+---------+--------------------------------------------------------------------
+combined |   1,937     921.586    1.708673    75.20101    918.2349     924.937
+---------+--------------------------------------------------------------------
+    diff |             14.5062    3.404465                7.829399    21.18301
+------------------------------------------------------------------------------
+    diff = mean(small cl) - mean(regular)                         t =   4.2609
+Ho: diff = 0                                     degrees of freedom =     1935
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 1.0000         Pr(|T| > |t|) = 0.0000          Pr(T > t) = 0.0000
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+small cl |     804    935.2463    2.712465    76.91165    929.9219    940.5706
+ regular |   1,002     921.498    2.279246    72.14812    917.0254    925.9707
+---------+--------------------------------------------------------------------
+combined |   1,806    927.6185      1.7554    74.59935    924.1757    931.0613
+---------+--------------------------------------------------------------------
+    diff |            13.74826    3.518212                6.848067    20.64846
+------------------------------------------------------------------------------
+    diff = mean(small cl) - mean(regular)                         t =   3.9077
+Ho: diff = 0                                     degrees of freedom =     1804
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 1.0000         Pr(|T| > |t|) = 0.0001          Pr(T > t) = 0.0000
+P score for the differene in class size effect across rural
+1
+
+             |      e(b)   e(count)      e(se)       e(t)    e(df_t)     e(p_l)       e(p) 
+-------------+-----------------------------------------------------------------------------
+    tcombssk |   14.5062       1937   3.404465   4.260935       1935   .9999893   .0000213 
+
+             |    e(p_u)     e(N_1)    e(mu_1)     e(N_2)    e(mu_2) 
+-------------+-------------------------------------------------------
+    tcombssk |  .0000107        934   929.0974       1003   914.5912 
+(output written to ttest_rural_1.tex)
+
+             |      e(b)   e(count)      e(se)       e(t)    e(df_t)     e(p_l)       e(p) 
+-------------+-----------------------------------------------------------------------------
+    tcombssk |  13.74826       1806   3.518212   3.907742       1804   .9999517   .0000966 
+
+             |    e(p_u)     e(N_1)    e(mu_1)     e(N_2)    e(mu_2) 
+-------------+-------------------------------------------------------
+    tcombssk |  .0000483        804   935.2463       1002    921.498 
+(output written to ttest_rural_2.tex)
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+small cl |   1,187    940.3218    2.204641    75.95622    935.9964    944.6473
+ regular |   1,358    927.5302    1.946198    71.71945    923.7123    931.3481
+---------+--------------------------------------------------------------------
+combined |   2,545    933.4963      1.4666    73.98701    930.6204    936.3721
+---------+--------------------------------------------------------------------
+    diff |            12.79163    2.929459                7.047259      18.536
+------------------------------------------------------------------------------
+    diff = mean(small cl) - mean(regular)                         t =   4.3665
+Ho: diff = 0                                     degrees of freedom =     2543
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 1.0000         Pr(|T| > |t|) = 0.0000          Pr(T > t) = 0.0000
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+small cl |     541    913.7283    3.179171    73.94564    907.4832    919.9733
+ regular |     636    897.8789    2.862293    72.18428    892.2582    903.4996
+---------+--------------------------------------------------------------------
+combined |   1,177     905.164    2.139321    73.39463    900.9667    909.3613
+---------+--------------------------------------------------------------------
+    diff |            15.84935    4.269511                7.472634    24.22607
+------------------------------------------------------------------------------
+    diff = mean(small cl) - mean(regular)                         t =   3.7122
+Ho: diff = 0                                     degrees of freedom =     1175
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.9999         Pr(|T| > |t|) = 0.0002          Pr(T > t) = 0.0001
+P score for the differene in class size effect across srace
+1
+
+             |      e(b)   e(count)      e(se)       e(t)    e(df_t)     e(p_l)       e(p) 
+-------------+-----------------------------------------------------------------------------
+    tcombssk |  12.79163       2545   2.929459   4.366549       2543   .9999934   .0000131 
+
+             |    e(p_u)     e(N_1)    e(mu_1)     e(N_2)    e(mu_2) 
+-------------+-------------------------------------------------------
+    tcombssk |  6.56e-06       1187   940.3218       1358   927.5302 
+(output written to ttest_srace_1.tex)
+
+             |      e(b)   e(count)      e(se)       e(t)    e(df_t)     e(p_l)       e(p) 
+-------------+-----------------------------------------------------------------------------
+    tcombssk |  15.84935       1177   4.269511   3.712217       1175   .9998925   .0002151 
+
+             |    e(p_u)     e(N_1)    e(mu_1)     e(N_2)    e(mu_2) 
+-------------+-------------------------------------------------------
+    tcombssk |  .0001075        541   913.7283        636   897.8789 
+(output written to ttest_srace_2.tex)
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+small cl |     820       911.1    2.472742    70.80857    906.2463    915.9537
+ regular |     950    897.3147    2.248199    69.29416    892.9027    901.7268
+---------+--------------------------------------------------------------------
+combined |   1,770    903.7011    1.671373    70.31696    900.4231    906.9792
+---------+--------------------------------------------------------------------
+    diff |            13.78526    3.336679                7.241012    20.32951
+------------------------------------------------------------------------------
+    diff = mean(small cl) - mean(regular)                         t =   4.1314
+Ho: diff = 0                                     degrees of freedom =     1768
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 1.0000         Pr(|T| > |t|) = 0.0000          Pr(T > t) = 0.0000
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+small cl |     913    950.8675    2.529487    76.43069    945.9032    955.8318
+ regular |   1,051    936.6042    2.206085    71.51934    932.2754     940.933
+---------+--------------------------------------------------------------------
+combined |   1,964    943.2347    1.673539    74.16627    939.9526    946.5168
+---------+--------------------------------------------------------------------
+    diff |            14.26328    3.340742                7.711508    20.81506
+------------------------------------------------------------------------------
+    diff = mean(small cl) - mean(regular)                         t =   4.2695
+Ho: diff = 0                                     degrees of freedom =     1962
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 1.0000         Pr(|T| > |t|) = 0.0000          Pr(T > t) = 0.0000
+P score for the differene in class size effect across sesk
+1
+
+             |      e(b)   e(count)      e(se)       e(t)    e(df_t)     e(p_l)       e(p) 
+-------------+-----------------------------------------------------------------------------
+    tcombssk |  13.78526       1770   3.336679   4.131432       1768   .9999811   .0000377 
+
+             |    e(p_u)     e(N_1)    e(mu_1)     e(N_2)    e(mu_2) 
+-------------+-------------------------------------------------------
+    tcombssk |  .0000189        820      911.1        950   897.3147 
+(output written to ttest_sesk_1.tex)
+
+             |      e(b)   e(count)      e(se)       e(t)    e(df_t)     e(p_l)       e(p) 
+-------------+-----------------------------------------------------------------------------
+    tcombssk |  14.26328       1964   3.340742   4.269496       1962   .9999897   .0000205 
+
+             |    e(p_u)     e(N_1)    e(mu_1)     e(N_2)    e(mu_2) 
+-------------+-------------------------------------------------------
+    tcombssk |  .0000103        913   950.8675       1051   936.6042 
+(output written to ttest_sesk_2.tex)
+
+. ********************************************************************************
+. 
+. 
+. ********************************************************************************
+. **                                   P7                                       **
+. ********************************************************************************
+. //determine the effect size of student characteristic variables//
+. 
+. foreach var of varlist rural srace sesk ssex {
+  2. 
+. ttest treadssk , by(`var')
+  3. ttest tmathssk, by(`var')
+  4. 
+. }
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+non-rura |   3,063    435.7721    .5655257    31.29867    434.6633     436.881
+   rural |   2,726    437.7964    .6153882     32.1301    436.5897    439.0031
+---------+--------------------------------------------------------------------
+combined |   5,789    436.7253     .416719    31.70626    435.9084    437.5423
+---------+--------------------------------------------------------------------
+    diff |           -2.024286    .8345017               -3.660222   -.3883507
+------------------------------------------------------------------------------
+    diff = mean(non-rura) - mean(rural)                           t =  -2.4257
+Ho: diff = 0                                     degrees of freedom =     5787
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.0077         Pr(|T| > |t|) = 0.0153          Pr(T > t) = 0.9923
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+non-rura |   3,132    482.6395    .8556162    47.88394    480.9619    484.3172
+   rural |   2,739    488.5075    .9037681    47.29911    486.7353    490.2796
+---------+--------------------------------------------------------------------
+combined |   5,871    485.3771    .6225053    47.69788    484.1568    486.5974
+---------+--------------------------------------------------------------------
+    diff |           -5.867957    1.245563               -8.309719   -3.426195
+------------------------------------------------------------------------------
+    diff = mean(non-rura) - mean(rural)                           t =  -4.7111
+Ho: diff = 0                                     degrees of freedom =     5869
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.0000         Pr(|T| > |t|) = 0.0000          Pr(T > t) = 1.0000
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+   white |   3,903    440.4094    .5173446    32.32058    439.3951    441.4237
+   black |   1,858     428.922    .6673885    28.76746     427.613    430.2309
+---------+--------------------------------------------------------------------
+combined |   5,761    436.7046    .4173174    31.67491    435.8865    437.5227
+---------+--------------------------------------------------------------------
+    diff |            11.48747    .8799275                9.762481    13.21246
+------------------------------------------------------------------------------
+    diff = mean(white) - mean(black)                              t =  13.0550
+Ho: diff = 0                                     degrees of freedom =     5759
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 1.0000         Pr(|T| > |t|) = 0.0000          Pr(T > t) = 0.0000
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+   white |   3,948    491.1497    .7334162    46.08282    489.7118    492.5876
+   black |   1,895     473.419    1.119692    48.74197     471.223     475.615
+---------+--------------------------------------------------------------------
+combined |   5,843    485.3993    .6238343    47.68559    484.1763    486.6222
+---------+--------------------------------------------------------------------
+    diff |             17.7307    1.312404                 15.1579     20.3035
+------------------------------------------------------------------------------
+    diff = mean(white) - mean(black)                              t =  13.5101
+Ho: diff = 0                                     degrees of freedom =     5841
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 1.0000         Pr(|T| > |t|) = 0.0000          Pr(T > t) = 0.0000
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+free lun |   2,789    428.0283    .5133395    27.10996    427.0218    429.0349
+non-free |   2,983    444.8384    .6140126    33.53543    443.6345    446.0423
+---------+--------------------------------------------------------------------
+combined |   5,772    436.7159    .4176365    31.72938    435.8971    437.5346
+---------+--------------------------------------------------------------------
+    diff |           -16.81009    .8059882               -18.39013   -15.23005
+------------------------------------------------------------------------------
+    diff = mean(free lun) - mean(non-free)                        t = -20.8565
+Ho: diff = 0                                     degrees of freedom =     5770
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.0000         Pr(|T| > |t|) = 0.0000          Pr(T > t) = 1.0000
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+free lun |   2,823    473.3252    .8731408    46.39164    471.6131    475.0372
+non-free |   3,031    496.5975    .8392241    46.20308     494.952     498.243
+---------+--------------------------------------------------------------------
+combined |   5,854    485.3748    .6238115    47.72871    484.1519    486.5977
+---------+--------------------------------------------------------------------
+    diff |           -23.27231    1.210887               -25.64609   -20.89852
+------------------------------------------------------------------------------
+    diff = mean(free lun) - mean(non-free)                        t = -19.2192
+Ho: diff = 0                                     degrees of freedom =     5852
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.0000         Pr(|T| > |t|) = 0.0000          Pr(T > t) = 1.0000
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+    male |   2,971    433.7856    .5641228    30.74858    432.6795    434.8917
+  female |   2,818    439.8247    .6104079     32.4034    438.6278    441.0216
+---------+--------------------------------------------------------------------
+combined |   5,789    436.7253     .416719    31.70626    435.9084    437.5423
+---------+--------------------------------------------------------------------
+    diff |           -6.039104    .8300134               -7.666241   -4.411968
+------------------------------------------------------------------------------
+    diff = mean(male) - mean(female)                              t =  -7.2759
+Ho: diff = 0                                     degrees of freedom =     5787
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.0000         Pr(|T| > |t|) = 0.0000          Pr(T > t) = 1.0000
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. Err.   Std. Dev.   [95% Conf. Interval]
+---------+--------------------------------------------------------------------
+    male |   3,014    481.7113    .8650785    47.49273    480.0151    483.4076
+  female |   2,857    489.2443     .890848    47.61664    487.4975    490.9911
+---------+--------------------------------------------------------------------
+combined |   5,871    485.3771    .6225053    47.69788    484.1568    486.5974
+---------+--------------------------------------------------------------------
+    diff |           -7.532965    1.241675               -9.967105   -5.098825
+------------------------------------------------------------------------------
+    diff = mean(male) - mean(female)                              t =  -6.0668
+Ho: diff = 0                                     degrees of freedom =     5869
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.0000         Pr(|T| > |t|) = 0.0000          Pr(T > t) = 1.0000
+
+. 
+. cap log close
