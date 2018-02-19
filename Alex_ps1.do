@@ -17,6 +17,15 @@ log using ps1.log, replace
 local data 
 use project_star_ps1.dta, clear
 
+
+*generate an urban rural variable
+gen rural = schtypek
+replace rural = 1 if rural != 3
+replace rural = 2 if rural == 3
+label define urb 1 "non-rural" 2 "rural"
+label values rural urb
+
+
 ********************************************************************************
 **                                   P1                                       **
 ********************************************************************************
@@ -31,12 +40,16 @@ esttab using sum.tex, cells("count mean sd min max") booktabs replace
 
 
 
+
 //examine specific variables of interest//
 foreach var of varlist ssex srace sesk cltypek hdegk totexpk tracek schtypek {
 tab `var'
 }
 
-
+foreach var of varlist ssex srace sesk rural {
+	estpost tab `var' cltypek
+	esttab using `var'_tab.tex, label booktabs replace
+}
 
 //examine distribution of variables//
 foreach var of varlist tcombssk treadssk tmathssk {
@@ -49,15 +62,16 @@ graph export "`var'_hist.png", as(png) replace
 ********************************************************************************
 //do crosstabs of classroom size and baseline student characteristics//
 **code**
-foreach var of varlist ssex srace sesk {
-tab cltyp `var', row chi2 
+foreach var of varlist ssex srace sesk rural {
+	tab cltyp `var', row chi2 
+
+
+	*output tables
+	qui tabout cltypek ssex using `var'_ctab.txt, ///
+	c(freq row) stats(chi2) ///
+	style(tex) bt cl1(2-7) cl2(2-3 4-5 6-7) replace 
+
 }
-
-*output tables
-qui tabout cltypek ssex using test.txt, ///
-c(freq row) stats(chi2) ///
-style(tex) bt cl1(2-7) cl2(2-3 4-5 6-7) replace 
-
 ********************************************************************************
 **                                   P3 & 4                                   **
 ********************************************************************************
@@ -125,12 +139,7 @@ foreach var of varlist tcomb tmath tread {
 *make race a dummy
 replace srace = . if srace == 6
 
-*generate an urban rural variable
-gen rural = schtypek
-replace rural = 1 if rural != 3
-replace rural = 2 if rural == 3
-label define urb 1 "non-rural" 2 "rural"
-label values rural urb
+
 
 *****Begin Loop Through Student Characteristic Variables************************
 
