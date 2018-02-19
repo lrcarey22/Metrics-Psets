@@ -12,6 +12,7 @@ cap cd "\\files\ak29\ClusterDownloads\Econometrics"
 cap log close
 cap ssc install tabout
 cap ssc install copydesc
+cap ssc install diff
 log using ps1.log, replace
 local data 
 use project_star_ps1.dta, clear
@@ -62,52 +63,59 @@ style(tex) bt cl1(2-7) cl2(2-3 4-5 6-7) replace
 ********************************************************************************
 //compare mean math scores in small and regular (+ aid) classes//
 
-
-estpost tabstat tmathssk , by(cltypek ) statistics(mean sd n) columns(statistics)
-
-*output table
-esttab using means.tex, cells("mean sd n") replace
-
-/*calculate t statistic by hand (why??)//
---------------------------------------------------------------------------------
-t = (Xbar_1 - Xbar_2) / sqrt[ds1/n1 + sd2/n2]
-------------------------------------------------------------------------------*/
-ereturn list
-matrix means = e(mean)
-matrix sds = e(sd)
-matrix counts = e(count)
-
-*difference between math scores in small and regular classes
-di (means[1,1]-means[1,2]) / sqrt(((sds[1,1]^2)/counts[1,1])+ ///
-((sds[1,2]^2)/counts[1,2]))
-
-
-*difference between math scores in small and regual+aid classes
-di (means[1,1]-means[1,3]) / sqrt(((sds[1,1]^2)/counts[1,1])+ ///
-((sds[1,3]^2)/counts[1,3]))
-
-//calculate t statistic using ttest//
 *create groupings for small classes and regular (+ aid) classes
-gen small_reg = cltypek
-gen small_reg_a = cltypek
+gen small_reg = cltypek   - 1
+gen small_reg_a = cltypek - 1
 
-label values small_reg   cltypek
-label values small_reg_a cltypek
+label define class 0 "small class" 1 "regular class"
 
-replace small_reg =   . if small_reg == 3
-replace small_reg_a = . if small_reg == 2
+label values small_reg   class
+label values small_reg_a class
 
-*perform t test
-ttest tmathssk, by(small_reg)
-ttest tmathssk, by(small_reg_a)
+replace small_reg =   . if small_reg == 2
+replace small_reg_a = . if small_reg == 0
 
-*output tables
-estpost ttest tmathssk, by(small_reg)
-esttab using ttest_1.tex, c(mu_1 mu_2 t p)  label replace
+*loop through each student outcome variable
+foreach var of varlist tcomb tmath tread { 
 
-estpost ttest tmathssk, by(small_reg_a)
-esttab using ttest_2.tex, c(mu_1 mu_2 t p)  label replace
+	estpost tabstat `var' , by(cltypek ) statistics(mean sd n) columns(statistics)
 
+	*output table
+	esttab using means.tex, cells("mean sd n") replace
+
+	/*calculate t statistic by hand (why??)//
+	----------------------------------------------------------------------------
+	t = (Xbar_1 - Xbar_2) / sqrt[ds1/n1 + sd2/n2]
+	--------------------------------------------------------------------------*/
+	ereturn list
+	matrix means = e(mean)
+	matrix sds = e(sd)
+	matrix counts = e(count)
+
+	*difference between math scores in small and regular classes
+	di (means[1,1]-means[1,2]) / sqrt(((sds[1,1]^2)/counts[1,1])+ ///
+	((sds[1,2]^2)/counts[1,2]))
+
+
+	*difference between math scores in small and regual+aid classes
+	di (means[1,1]-means[1,3]) / sqrt(((sds[1,1]^2)/counts[1,1])+ ///
+	((sds[1,3]^2)/counts[1,3]))
+
+	//calculate t statistic using ttest//
+	
+
+	*perform t test
+	ttest `var', by(small_reg)
+	ttest `var', by(small_reg_a)
+
+	*output tables
+	estpost ttest `var', by(small_reg)
+	esttab using ttest_1.tex, c(mu_1 mu_2 t p)  label replace
+
+	estpost ttest `var', by(small_reg_a)
+	esttab using ttest_2.tex, c(mu_1 mu_2 t p)  label replace
+
+}
 ********************************************************************************
 **                                   P5                                       **
 ********************************************************************************
@@ -130,23 +138,23 @@ local testscore tcombssk
 
 foreach var of varlist rural srace sesk {
 
-	*test effect for white students
+	*test effect for group1 students
 	ttest `testscore' if `var'==1, by(small_reg)
 
 	*store difference and standard deviation
 	local sd_1 r(sd)
 	local x_bar_1 (r(mu_1) - r(mu_2))
-	local n_1 r(N_1)+r(N_2)
+	local n_1 (r(N_1)+r(N_2))/2
 
 
 
-	*test effect for black students
+	*test effect for group2 students
 	ttest `testscore' if `var'==2, by(small_reg)
 
 	*store difference and standard deviation
 	local sd_2 r(sd)
 	local x_bar_2 (r(mu_1) - r(mu_2))
-	local n_2 r(N_1)+r(N_2)
+	local n_2 (r(N_1)+r(N_2))/2
 
 
 
@@ -162,6 +170,9 @@ foreach var of varlist rural srace sesk {
 
 	local tscore (`x_bar_1' - `x_bar_2') / sqrt((`sd_1'^2)/`n_1'+(`sd_2'^2)/`n_2')
 
+	di "t score for the differene in class size effect across `var':"
+	di `tscore'
+	
 	di "P score for the differene in class size effect across `var':"
 	di 2*ttail(2,`tscore')
 
@@ -172,6 +183,23 @@ foreach var of varlist rural srace sesk {
 	esttab using ttest_`var'_2.tex, c(mu_1 mu_2 t p) label replace
 
 	
+	
+	//Actually compare differences the correct way using the Diff command//
+	gen d1_`var' = `var' - 1 // convert the demographic varaible to a dummy
+	
+	*create a varaible that interacts the "treatment" with large class size
+	gen t1t2 = d1_`var'*small_reg
+	
+	*use a regression to get the difference in difference coefficient
+	reg `testscore' t1t2 `var' small_reg
+	drop t1t2
+	
+	*The coefficient on pt is the difference-in-difference estimator. 
+	*The t-statistic on that regression coefficient is the t-test for equality of the differences.
+
+
+	
+	
 }
 ********************************************************************************
 
@@ -179,7 +207,25 @@ foreach var of varlist rural srace sesk {
 **                                   P6                                       **
 ********************************************************************************
 
-???
+foreach var of varlist ssex srace sesk rural {
+
+preserve
+
+collapse (mean) tcombssk tmathssk treadssk , by(classid `var' small_reg)
+
+//Actually compare differences the correct way using the Diff command//
+	gen d1_`var' = `var' - 1 // convert the demographic varaible to a dummy
+	
+	*create a varaible that interacts the "treatment" with large class size
+	gen t1t2 = d1_`var'*small_reg
+	
+	*use a regression to get the difference in difference coefficient
+	reg `testscore' t1t2 `var' small_reg
+	drop t1t2
+
+restore
+
+}
 
 ********************************************************************************
 **                                   P7                                       **
