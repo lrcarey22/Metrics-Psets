@@ -25,6 +25,8 @@ replace rural = 2 if rural == 3
 label define urb 1 "non-rural" 2 "rural"
 label values rural urb
 
+*make race a dummy
+replace srace = . if srace == 6
 
 ********************************************************************************
 **                                   P1                                       **
@@ -67,7 +69,7 @@ foreach var of varlist ssex srace sesk rural {
 
 
 	*output tables
-	qui tabout cltypek ssex using `var'_ctab.txt, ///
+	qui tabout cltypek `var' using `var'_ctab.txt, ///
 	c(freq row) stats(chi2) ///
 	style(tex) bt cl1(2-7) cl2(2-3 4-5 6-7) replace 
 
@@ -95,7 +97,7 @@ foreach var of varlist tcomb tmath tread {
 	estpost tabstat `var' , by(cltypek ) statistics(mean sd n) columns(statistics)
 
 	*output table
-	esttab using means.tex, cells("mean sd n") replace
+	esttab using `var'_means.tex, cells("mean sd n") replace
 
 	/*calculate t statistic by hand (why??)//
 	----------------------------------------------------------------------------
@@ -124,10 +126,10 @@ foreach var of varlist tcomb tmath tread {
 
 	*output tables
 	estpost ttest `var', by(small_reg)
-	esttab using ttest_1.tex, c(mu_1 mu_2 t p)  label replace
+	esttab using `var'_ttest_1.tex, c(mu_1 mu_2 t p)  label replace
 
 	estpost ttest `var', by(small_reg_a)
-	esttab using ttest_2.tex, c(mu_1 mu_2 t p)  label replace
+	esttab using `var'_ttest_2.tex, c(mu_1 mu_2 t p)  label replace
 
 }
 ********************************************************************************
@@ -136,8 +138,7 @@ foreach var of varlist tcomb tmath tread {
 //Estimate effect size by student background characteristic//
 
 
-*make race a dummy
-replace srace = . if srace == 6
+
 
 
 
