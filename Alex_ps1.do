@@ -1,14 +1,15 @@
-********* WWS508c PS# *********
-*  Spring 2018			      *
-*  Author : Alex Kaufman      *
-*  Email: ak29@princeton.edu  *
-*  Update: 2/16               *
-*******************************
+********* WWS508c PS# *******************
+*  Spring 2018			                *
+*  Authors: Alex Kaufman, Lachlan Carey *
+*  Email: ak29@princeton.edu            *
+*  Update: 2/16                         *
+*****************************************
 //any disclaimer...//
 //credit: the rest of group members' names//
 
 set more off
 cap cd "\\files\ak29\ClusterDownloads\Econometrics"
+cap cd "C:\Users\TerryMoon\Dropbox\TeachingPrinceton\wws508c2018S\ps\ps#"
 cap log close
 cap ssc install tabout
 cap ssc install copydesc
@@ -97,7 +98,7 @@ foreach var of varlist tcomb tmath tread {
 	estpost tabstat `var' , by(cltypek ) statistics(mean sd n) columns(statistics)
 
 	*output table
-	esttab using `var'_means.tex, cells("mean sd n") replace
+	esttab using `var'_means.tex, cells("mean sd count") replace
 
 	/*calculate t statistic by hand (why??)//
 	----------------------------------------------------------------------------
@@ -108,13 +109,15 @@ foreach var of varlist tcomb tmath tread {
 	matrix sds = e(sd)
 	matrix counts = e(count)
 
-	*difference between math scores in small and regular classes
+	*difference between scores in small and regular classes
+	di "t score for difference between `var' scores in small and regular classes"
 	di (means[1,1]-means[1,2]) / sqrt(((sds[1,1]^2)/counts[1,1])+ ///
 	((sds[1,2]^2)/counts[1,2]))
 
 
-	*difference between math scores in small and regual+aid classes
-	di (means[1,1]-means[1,3]) / sqrt(((sds[1,1]^2)/counts[1,1])+ ///
+	*difference between scores in regular and regular+aid classes
+	di "t score for difference between `var' scores in regular and regual+aid classes"
+	di (means[1,2]-means[1,3]) / sqrt(((sds[1,2]^2)/counts[1,2])+ ///
 	((sds[1,3]^2)/counts[1,3]))
 
 	//calculate t statistic using ttest//
@@ -131,7 +134,13 @@ foreach var of varlist tcomb tmath tread {
 	estpost ttest `var', by(small_reg_a)
 	esttab using `var'_ttest_2.tex, c(mu_1 mu_2 t p)  label replace
 
+	esize twosample `var', by(small_reg)
+	esize twosample `var', by(small_reg_a)
+	
+
+	
 }
+
 ********************************************************************************
 **                                   P5                                       **
 ********************************************************************************
@@ -170,11 +179,11 @@ foreach var of varlist rural srace sesk {
 
 
 	/*/estimate difference in means//
-	----------------------------------------------------------------------------
-	T score  estimated as:                          x_bar-1 - x_bar_2 
-											   --------------------------
-											   sqrt(sd_1^2/n_1 + sd_2^2/n_2)							
-	--------------------------------------------------------------------------*/
+	------------------------------------------------------------------------
+	T score  estimated as:                    x_bar-1 - x_bar_2 
+										 --------------------------
+									   sqrt(sd_1^2/n_1 + sd_2^2/n_2)							
+	----------------------------------------------------------------------*/
 
 	local sigma_p sqrt(((`n_1'-1)*(`sd_1'^2) + (`n_2'-1)*(`sd_1'^2)) /(`n_1'+`n_2'-2))
 
@@ -244,9 +253,13 @@ restore
 
 foreach var of varlist rural srace sesk ssex {
 
-ttest treadssk , by(`var')
-ttest tmathssk, by(`var')
+	ttest treadssk , by(`var')
+	ttest tmathssk, by(`var')
 
+	estpost ttest treadssk, by(`var')
+	esttab using `var'_read_effect.tex, c(mu_1 mu_2 t p) label replace
+	estpost ttest tmathssk, by(`var')
+	esttab using `var'_math_effect.tex, c(mu_1 mu_2 t p) label replace
 }
 
 cap log close
