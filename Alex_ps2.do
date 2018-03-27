@@ -7,6 +7,7 @@
 
 set more off
 cap cd "\\files\ak29\ClusterDownloads\Econometrics\Metrics-Psets"
+cap cd C:\Users\TerryMoon\Dropbox\TeachingPrinceton\wws508c2018S\ps\ps2
 cap log close
 log using ps1.log, replace
 

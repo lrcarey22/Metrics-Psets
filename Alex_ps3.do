@@ -41,10 +41,12 @@ esttab using sum3.tex, cells("count mean sd min max") booktabs replace
 *generage means by gender
 bysort age: egen av_mort_m = mean(mort5) if sex == 1
 bysort age: egen av_mort_f = mean(mort5) if sex == 2
+egen av_mort = mean(mort5) // overall mean
+
 
 *plot
 line av_mort_m age || line av_mort_f age, legend(label(1 "Average Male Mortality") label(2 "Average Female Mortality")) ytitle("Died within 5 years of survey")
-
+*graph export g1.png, replace
 *therefore average mortality increases with age and male mortality is generally higher than women's. this is as expected*
 
 *generate means for health by gender
@@ -53,7 +55,7 @@ bysort age: egen av_health_f = mean(bad_health) if sex == 2
 
 *plot
 line av_health_m age || line av_health_f age, legend(label(1 "Average Male Health Outcome") label(2 "Average Female Health Outcome")) ytitle("Percent who reported poor or fair health")
-
+graph export g2.png, replace
 *older citizens report worse health outcomes - also to be expected. There doesn't appear to be a sigificant difference by gender*
 
 
@@ -96,13 +98,13 @@ label values race ethn
 
 *genereate graph for health outcomes over income levels
 graph bar (mean) bad_health, over(income) ytitle(Percent self-reporting low health) title(Health Outcomes Over Income)
-
+graph export bar1.png, replace 
 *generate graph for health outcomes over education levels
 graph bar (mean) bad_health, over(edu) ytitle(Percent self-reporting low health) title(Health Outcomes Over Education)
-
+graph export bar2.png, replace
 *generate graph for health outcomes over ethnicity
 graph bar (mean) bad_health, over(race) ytitle(Percent self-reporting low health) title(Health Outcomes by Race)
-
+graph export bar3.png, replace
 *the results are as expected.  poorer, less educated and minority status individuals have worse self reported outcomes
 
 ********************************************************************************
@@ -114,16 +116,31 @@ graph bar (mean) bad_health, over(race) ytitle(Percent self-reporting low health
 foreach var of varlist bad_health mort5 {
 
 	*run LPM
-	reg `var' age edyr black hisp fam*, r
+	reg `var' age income edu black hisp , r
 
 	*run probit
-	qui probit `var' age edyr black hisp fam*, r
+	probit `var' age income edu black hisp, r
+	
+	*run logit
+	logit `var' age income edu black hisp, r
+}
+
+
+******************************** MARGINAL EFFECTS ******************************
+foreach var of varlist bad_health mort5 {
+
+	*run LPM
+	reg `var' age income edu black hisp , r
+
+	*run probit
+	qui probit `var' age income edu black hisp, r
 	margins, dydx(*)
 	
 	*run logit
-	qui logit `var' age edyr black hisp fam*, r
+	qui logit `var' age income edu black hisp, r
 	margins, dydx(*)
 }
+
 
 *results are similar, coefficients on black not significamt
 
@@ -156,49 +173,45 @@ recode alc5upyr (1/max=1), gen(drink5)
 *correlations*
 pwcorr bad_health mort5 uninsured income black hisp edu drink5 smoke100 vig10fwk bacon, sig
 
-*Reg 1 - Bad health uninsured no age*
-reg bad_health faminc_20t75 faminc_gt75 uninsured, robust
-logistic bad_health faminc_20t75 faminc_gt75 uninsured, robust
+*Reg 1 - Bad health uninsured
+logistic bad_health age income black hisp edu uninsured, robust
 mfx compute
 
-*Reg 2 - Bad health uninsured w/ age*
-reg bad_health faminc_20t75 faminc_gt75 uninsured, robust
-logistic bad_health faminc_20t75 faminc_gt75 uninsured, robust
+*Reg 2 - Bad health behavior
+logistic bad_health age income black hisp edu smoke100 vig10fwk bacon, robust
 mfx compute
 
-*Reg 3 - Bad health behavior*
-reg bad_health age faminc_20t75 faminc_gt75 drink5 smoke100 vig10fwk, robust
-logistic bad_health age faminc_20t75 faminc_gt75 drink5 smoke100 vig10fwk, robust
+*Reg 3 - Bad health uninsured and behavior
+logistic bad_health age income black hisp edu uninsured drink5 smoke100 vig10fwk, robust
 mfx compute
 
-*Reg 4 - bad heath uninsured & behavior w/age*
-reg bad_health age faminc_20t75 faminc_gt75 uninsured drink5 smokev vig10fwk, robust
-logistic bad_health age faminc_20t75 faminc_gt75 uninsured drink5 smokev vig10fwk, robust
-mfx compute
 
 
 ********************************************************************************
 **                                   P8                                       **
 ********************************************************************************
 //relationship between health and mortality//
+cap drop p_prob*
 
 *simmple probit regression
-probit mort5 health, r
+logit mort5 health, r
 
 *predict values
 predict p_prob_mort
 
 *plot the predicted mortality against health
-scatter p_prob_mort health
-
+sort health 
+twoway (scatter p_prob_mort health)(line p_prob_mort health), ytitle(5 yr. mortality risk)
+graph export pred1.png, replace
 *controll probit regression
-probit mort5 health age fam* race edyrs, r
+logit mort5 health age fam* race edu, r
 
 *predict values
 predict p_prob_mort_cont
 
 *plot the predicted mortality against health
-scatter p_prob_mort_cont health
+scatter p_prob_mort_cont health, ytitle(5 yr. mortality risk)
+graph export pred2.png, replace
 
 *therefore the relationship is monotonic, however it mortality increases faster when self-reported health outcomes become fair or poor
 
@@ -209,26 +222,26 @@ scatter p_prob_mort_cont health
 //ordered probit//
 
 *run ordered probit
-oprobit health age edyr black hisp fam*, r
+oprobit health age edu black hisp income, r
 
 	
 *run probit from question 4 for comparison
-probit bad_health age edyr black hisp fam*, r
+probit bad_health age edu black hisp income, r
 
 *results are pretty similar
 
 *run ordered probit  margins
-qui oprobit health age edyr black hisp fam*, r
+qui oprobit health age edu black hisp income, r
 margins, dydx(*)
 	
 *run probit margins from question 4 for comparison 
-qui probit bad_health age edyr black hisp fam*, r
+qui probit bad_health age edu black hisp income, r
 margins, dydx(*)
 
-*but we do see significant variation in marginal effect sizes and magniutes with the ordered probit
+*but we do see significant variation in marginal effect sizes and magnitudes with the ordered probit
 
 *run probit
-qui logit mort5 age edyr black white fam*, r
+qui logit mort5 age edu black white fam*, r
 margins, dydx(white) at(faminc_2 ==1)
 	
 ********************************************************************************
@@ -254,12 +267,17 @@ foreach race of varlist white black {
 }
 
 graph bar avg_black*, ytitle(Average Predicted Probability) title(Predicted Health Ratings for Blacks) legend(label(1 "Excellent") label(2 "Very Good") label(3 "Good") label(4 "Fair") label(5 "Poor"))
-
+graph export black.png, replace
 graph bar avg_white*, ytitle(Average Predicted Probability) title(Predicted Health Ratings for Whites) legend(label(1 "Excellent") label(2 "Very Good") label(3 "Good") label(4 "Fair") label(5 "Poor"))
+graph export white.png, replace
 
 
 *generate historgrams for comparison
 hist health if black == 1
+graph export black_hist.png, replace
 hist health if white == 1
+graph export white_hist.png, replace
 
 log close
+
+translate ps3.log ps3.pdf
