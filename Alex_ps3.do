@@ -34,7 +34,7 @@ esttab using sum3.tex, cells("count mean sd min max") booktabs replace
 
 
 ********************************************************************************
-**                                   P1                                       **
+**                                   P2                                       **
 ********************************************************************************
 //line graphs of rates of mortality and fair/poor health by age//
 
@@ -88,7 +88,7 @@ label values edu ed
 gen race = 0 
 replace race = 1 if black == 1
 replace race = 2 if hisp ==  1
-replace race == . if black == . & hisp == .
+replace race = . if black == . & hisp == .
 
 label variable race "Race"
 label define ethn 0 "white" 1 "black" 2 "hispanic"
@@ -132,25 +132,76 @@ foreach var of varlist bad_health mort5 {
 ********************************************************************************
 //racial/income disparities//
 
-*make a variable for white to make this easier to understand
-gen white = 1
-replace white == 0 if black == 1 | hisp == 1
-
 *run logit
-logit mort5 age edyr black hisp fam*, r
-margins, dydx(*)
-margins, dydx(black) 
-margins, dydx(black) at(faminc_g ==1)
-margins, dydx(black) at(faminc_2 ==1)
-
-
-
 logit mort5 age edyr hisp black##faminc_g faminc_2, r
+
+*get all the marginal effects
 margins, dydx(*)
+
+*get the marginal effect of income for high income blacks
 margins black, dydx(faminc_g)
 
 *baseline is low income white, so we only need to determine the sign of being high-income black 
 *looks like high income blacks have a very slightly lower mortatilty risk 
+
+********************************************************************************
+**                                   P7                                       **
+********************************************************************************
+//investigating impact of insurance and behavior//
+
+*Recode behaviors into proper dummy variables**
+recode smokev (10=0) (20=1), gen(smoke100)
+recode alc5upyr (1/max=1), gen(drink5)
+
+*correlations*
+pwcorr bad_health mort5 uninsured income black hisp edu drink5 smoke100 vig10fwk bacon, sig
+
+*Reg 1 - Bad health uninsured no age*
+reg bad_health faminc_20t75 faminc_gt75 uninsured, robust
+logistic bad_health faminc_20t75 faminc_gt75 uninsured, robust
+mfx compute
+
+*Reg 2 - Bad health uninsured w/ age*
+reg bad_health faminc_20t75 faminc_gt75 uninsured, robust
+logistic bad_health faminc_20t75 faminc_gt75 uninsured, robust
+mfx compute
+
+*Reg 3 - Bad health behavior*
+reg bad_health age faminc_20t75 faminc_gt75 drink5 smoke100 vig10fwk, robust
+logistic bad_health age faminc_20t75 faminc_gt75 drink5 smoke100 vig10fwk, robust
+mfx compute
+
+*Reg 4 - bad heath uninsured & behavior w/age*
+reg bad_health age faminc_20t75 faminc_gt75 uninsured drink5 smokev vig10fwk, robust
+logistic bad_health age faminc_20t75 faminc_gt75 uninsured drink5 smokev vig10fwk, robust
+mfx compute
+
+
+********************************************************************************
+**                                   P8                                       **
+********************************************************************************
+//relationship between health and mortality//
+
+*simmple probit regression
+probit mort5 health, r
+
+*predict values
+predict p_prob_mort
+
+*plot the predicted mortality against health
+scatter p_prob_mort health
+
+*controll probit regression
+probit mort5 health age fam* race edyrs, r
+
+*predict values
+predict p_prob_mort_cont
+
+*plot the predicted mortality against health
+scatter p_prob_mort_cont health
+
+*therefore the relationship is monotonic, however it mortality increases faster when self-reported health outcomes become fair or poor
+
 
 ********************************************************************************
 **                                   P9                                       **
@@ -187,14 +238,27 @@ margins, dydx(white) at(faminc_2 ==1)
 
 *run ordered probit
 oprobit health age edyr black hisp fam*, r
-cap drop prob_health*
-forvalues i = 1/5 {
-	predict prob_health_`i', outcome(`i') // predict prob of health == i
+cap drop prob_health* 
+cap drop avg_*
+cap drop mat*
+
+*predict probabilities for each value and estimate probabilities
+foreach race of varlist white black {
+	forvalues i = 1/5 {
+		*predict prob_health_`i'_`race' , outcome(`i') // predict prob of health == i
+		*predict the average probability of health ranking i at the average values of other variables (by race)
+		margins, atmeans by(`race') predict(outcome(`i')) 
+		matrix mat_`i' = r(table) //retrieve value of estimate
+		gen avg_`race'_`i'_p = mat_`i'[1,2] //create a new variable with that estimate
+	}
 }
 
+graph bar avg_black*, ytitle(Average Predicted Probability) title(Predicted Health Ratings for Blacks) legend(label(1 "Excellent") label(2 "Very Good") label(3 "Good") label(4 "Fair") label(5 "Poor"))
+
+graph bar avg_white*, ytitle(Average Predicted Probability) title(Predicted Health Ratings for Whites) legend(label(1 "Excellent") label(2 "Very Good") label(3 "Good") label(4 "Fair") label(5 "Poor"))
 
 
-*generate historgrams
+*generate historgrams for comparison
 hist health if black == 1
 hist health if white == 1
 
