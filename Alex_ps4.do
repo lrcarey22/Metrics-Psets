@@ -134,7 +134,7 @@ foreach var of varlist rep hsgrad somecoll fphealth {
 	xtreg `var' head_start male lnbw first if black == 0 & hisp == 0, i(mom_id) fe robust
 	
 	di "************************sex****************************"	
-	xtreg `var' head_start##male lnbw first if black == 0 & hisp == 0, i(mom_id) fe robust
+	xtreg `var' head_start##male lnbw first, i(mom_id) fe robust
 
 	}
 
