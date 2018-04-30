@@ -1,6 +1,7 @@
 cd "\\files\ak29\ClusterDownloads\ps4\ps4"
-use wws508c_deming.dta
+use wws508c_deming.dta, clear
 
+log using ps4.log
 /*******************************************************************************
                                     P1                                          
 *******************************************************************************/
@@ -70,7 +71,7 @@ xtreg comp_score_5to6 head_start male lnbw first, i(mom_id) fe robust
 
 *generate eleigibility variabe
 gen elig = 0
-replace elig = 1 sibdiff == 1
+replace elig = 1 if sibdiff == 1
 replace elig = 1 if head_start == 1
 
 *limit the regression 
@@ -134,10 +135,10 @@ foreach var of varlist rep hsgrad somecoll fphealth {
 	xtreg `var' head_start male lnbw first if black == 0 & hisp == 0, i(mom_id) fe robust
 	
 	di "************************sex****************************"	
-	xtreg `var' head_start##male lnbw first if black == 0 & hisp == 0, i(mom_id) fe robust
+	xtreg `var' head_start##male lnbw first, i(mom_id) fe robust
 
 	}
 
 
 	
-
+cap log close
