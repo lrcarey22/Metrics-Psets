@@ -7,14 +7,16 @@
 clear all
 set more off
 cap cd "C:\Users\Locky\Documents\STATA Assignment\Econometrics\ps5"
+cap cd  "\\files\ak29\ClusterDownloads\ps5\ps5"
 cap log close
 cap ssc install tabout
 cap ssc install copydesc
 cap ssc install diff
 cap ssc install estout
-log using ps5.log, replace
+cap log using ps5.log, replace
 local data wws508c_crime_ps5.dta
-use `data', clear
+cap use `data', clear
+cap use "\\files\ak29\ClusterDownloads\ps5\ps5\wws508c_crime_ps5.dta"
 
 
 /*******************************************************************************
@@ -72,8 +74,7 @@ recode elig (0=1) if draftnumber>=320&birthyr==1962
 /*******************************************************************************
                                     P4                                          
 *******************************************************************************/
-//First stage effect
-	
+//First stage regression
 	
 	
 	*no controls
@@ -86,40 +87,50 @@ recode elig (0=1) if draftnumber>=320&birthyr==1962
 
 	*fixed effects with controls
 	xtreg conscripted elig argentine indigenous naturalized, i(birthyr) fe robust
+	matrix fstage  = e(b)
+	scalar conscripted_beta_Z = fstage[1,1]
 	outreg2 using P4, label tex(fragment pretty) ctitle(With Controls) addtext(Birth Year FE, YES) append
 	
 /*******************************************************************************
                                     P5                                          
 *******************************************************************************/
-//Reduced form
+//Reduced form regressions
 
-reg conscripted elig, r
-predict double y2hat
-
-reg crimerate y2hat, r
-reg crimerate conscripted, r
 
 
 foreach var in crimerate arms property sexual murder threat drug whitecollar {
-	*no controls
-	reg conscripted elig
-	predict double z1hat_`var'
-	reg `var' z1hat_`var'
-	outreg2 using P5_`var', label tex(fragment pretty) ctitle(No Controls) replace
+	
+	*reduced form
+	xtreg `var' elig argentine indigenous naturalized, i(birthyr) fe robust
+	matrix `var'_rform  = e(b)
+	scalar `var'_beta_Z = `var'_rform[1,1]
+	di `var'_beta_Z
+}
+/*******************************************************************************
+                                       P6                        
+*******************************************************************************/
+//estimate the IV coefficient using the coefficients from red. form and stage 1
 
-	*controls
-	reg conscripted elig argentine indigenous naturalized, r
-	predict double z2hat_`var'
-	reg `var' z2hat_`var' argentine indigenous naturalized, r
-	outreg2 using P5_`var', label tex(fragment pretty) ctitle(With Controls) append 
+foreach var in crimerate arms property sexual murder threat drug whitecollar {
 
-	*fixed effects with controls
-	xtreg conscripted elig argentine indigenous naturalized, i(birthyr) fe robust
-	predict double z3hat_`var'
-	xtreg `var' z3hat_`var' argentine indigenous naturalized, i(birthyr) fe robust
-	outreg2 using P5_`var', label tex(fragment pretty) ctitle(With Controls) addtext(Birth Year FE, YES) append
-	}
+di "The coefficient for the IV estimate of conscription on `var' is "
+di `var'_beta_Z/conscripted_beta_Z
+
+}
 	
+/*******************************************************************************
+                                       P7                        
+*******************************************************************************/
+//Using the 2sls routine to get the same estimates
+
+foreach var in crimerate arms property sexual murder threat drug whitecollar {
+
+	ivregress 2sls `var' argentine indigenous naturalized i.birthyr (conscripted = elig)	
 	
+}	
 	
+/*******************************************************************************
+                                       P8                        
+*******************************************************************************/
+//Using the 2sls routine to get the same estimates
 	
