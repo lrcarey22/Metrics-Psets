@@ -1,0 +1,194 @@
+{smcl}
+{com}{sf}{ul off}{txt}
+{com}. 
+. cd "\\Files\ak29\ClusterDownloads\Econometrics\TimeSeries"
+{res}\\Files\ak29\ClusterDownloads\Econometrics\TimeSeries
+{txt}
+{com}. 
+. *install programs
+. cap ssc install ersur
+{txt}
+{com}. cap ssc install kpss
+{txt}
+{com}. 
+. *load the data
+. webuse lutkepohl2
+{txt}(Quarterly SA West German macro data, Bil DM, from Lutkepohl 1993 Table E.1)
+
+{com}. 
+. keep if qtr > 15 & qtr < 88
+{txt}(20 observations deleted)
+
+{com}. 
+. *declare data to be time series
+. tsset qtr
+{res}{txt}{col 9}time variable:  {res}{col 25}qtr, 1964q1 to 1981q4
+{txt}{col 17}delta:  {res}1 quarter
+{txt}
+{com}. 
+. *define varialbes to test
+. local test_vars ln_inc ln_inv
+{txt}
+{com}. 
+. *perform tests for unit root on the selected variables
+. foreach var of local test_vars {c -(}
+{txt}  2{com}. 
+.         di "----------------------results for the `var' varible--------------------"
+{txt}  3{com}.         
+.         *Dickey_Fuller
+.         di "Dickey Fuller: `var'"
+{txt}  4{com}.         dfuller `var', lags(1) trend
+{txt}  5{com}.         
+.         *Augmented Dickey_Fuller
+.         di "Augmented Dickey Fuller: `var'"
+{txt}  6{com}.         dfuller `var', trend
+{txt}  7{com}.         
+.         *Phillips-Peron
+.         di "Phillips-Peron: `var'"
+{txt}  8{com}.         pperron `var', trend 
+{txt}  9{com}.         
+.         *DF-GLS
+.         di "DF-GLS: `var'"
+{txt} 10{com}.         ersur `var', trend
+{txt} 11{com}.         
+.         *KPSS
+.         di "KPSS: `var'"
+{txt} 12{com}.         kpss `var', auto
+{txt} 13{com}.         
+. {c )-}
+----------------------results for the ln_inc varible--------------------
+Dickey Fuller: ln_inc
+
+{txt}Augmented Dickey-Fuller test for unit root         Number of obs   = {res}       70
+
+{txt}{col 32}{hline 10} Interpolated Dickey-Fuller {hline 9}
+                  Test         1% Critical       5% Critical      10% Critical
+               Statistic           Value             Value             Value
+{hline 78}
+ Z(t)         {res}    -0.807            -4.106            -3.480            -3.168
+{txt}{hline 78}
+MacKinnon approximate p-value for Z(t) = {res}0.9651
+Augmented Dickey Fuller: ln_inc
+
+{txt}Dickey-Fuller test for unit root                   Number of obs   = {res}       71
+
+{txt}{col 32}{hline 10} Interpolated Dickey-Fuller {hline 9}
+                  Test         1% Critical       5% Critical      10% Critical
+               Statistic           Value             Value             Value
+{hline 78}
+ Z(t)         {res}    -0.715            -4.104            -3.479            -3.167
+{txt}{hline 78}
+MacKinnon approximate p-value for Z(t) = {res}0.9721
+Phillips-Peron: ln_inc
+
+{txt}Phillips-Perron test for unit root                 Number of obs   = {res}       71
+                                                   {txt}Newey-West lags = {res}        3
+
+{txt}{col 32}{hline 10} Interpolated Dickey-Fuller {hline 9}
+                  Test         1% Critical       5% Critical      10% Critical
+               Statistic           Value             Value             Value
+{hline 78}
+ Z(rho)       {res}    -3.120           -26.414           -20.178           -17.094
+{txt} Z(t)         {res}    -0.999            -4.104            -3.479            -3.167
+{txt}{hline 78}
+MacKinnon approximate p-value for Z(t) = {res}0.9442
+DF-GLS: ln_inc
+
+Elliott, Rothenberg & Stock (1996) test results for 1967q1 - 1981q4
+Variable name: ln_inc
+Ho: Unit root
+Ha: Stationarity
+GLS detrended data
+{txt}{hline 74}
+Criteria{col 12}Lags{col 20}ERS stat.{col 33}p-value{col 45}1% cv{col 57}5% cv{col 66} 10% cv
+{hline 74}
+{res}FIXED{col 13}11{col 18}   -1.716{col 31}    0.320{col 42}   -2.942{col 54}   -2.449{col 65}   -2.210
+  AIC{col 13}3{col 18}   -1.603{col 31}    0.570{col 42}   -3.760{col 54}   -3.091{col 65}   -2.761
+  SIC{col 13}0{col 18}   -0.603{col 31}    0.950{col 42}   -3.607{col 54}   -2.914{col 65}   -2.587
+GTS05{col 13}3{col 18}   -1.603{col 31}    0.607{col 42}   -3.747{col 54}   -3.129{col 65}   -2.817
+GTS10{col 13}3{col 18}   -1.603{col 31}    0.605{col 42}   -3.711{col 54}   -3.088{col 65}   -2.786
+{txt}{hline 74}
+KPSS: ln_inc
+ 
+KPSS test for ln_inc
+ 
+Automatic bandwidth selection (maxlag) = 6
+Autocovariances weighted by Bartlett kernel
+ 
+Critical values for H0: ln_inc is trend stationary
+ 
+10%: 0.119  5% : 0.146  2.5%: 0.176  1% : 0.216
+ 
+Lag order    Test statistic
+{col 4} 6{col 13}    .163
+----------------------results for the ln_inv varible--------------------
+Dickey Fuller: ln_inv
+
+Augmented Dickey-Fuller test for unit root         Number of obs   = {res}       70
+
+{txt}{col 32}{hline 10} Interpolated Dickey-Fuller {hline 9}
+                  Test         1% Critical       5% Critical      10% Critical
+               Statistic           Value             Value             Value
+{hline 78}
+ Z(t)         {res}    -1.731            -4.106            -3.480            -3.168
+{txt}{hline 78}
+MacKinnon approximate p-value for Z(t) = {res}0.7370
+Augmented Dickey Fuller: ln_inv
+
+{txt}Dickey-Fuller test for unit root                   Number of obs   = {res}       71
+
+{txt}{col 32}{hline 10} Interpolated Dickey-Fuller {hline 9}
+                  Test         1% Critical       5% Critical      10% Critical
+               Statistic           Value             Value             Value
+{hline 78}
+ Z(t)         {res}    -1.751            -4.104            -3.479            -3.167
+{txt}{hline 78}
+MacKinnon approximate p-value for Z(t) = {res}0.7279
+Phillips-Peron: ln_inv
+
+{txt}Phillips-Perron test for unit root                 Number of obs   = {res}       71
+                                                   {txt}Newey-West lags = {res}        3
+
+{txt}{col 32}{hline 10} Interpolated Dickey-Fuller {hline 9}
+                  Test         1% Critical       5% Critical      10% Critical
+               Statistic           Value             Value             Value
+{hline 78}
+ Z(rho)       {res}    -7.295           -26.414           -20.178           -17.094
+{txt} Z(t)         {res}    -1.889            -4.104            -3.479            -3.167
+{txt}{hline 78}
+MacKinnon approximate p-value for Z(t) = {res}0.6603
+DF-GLS: ln_inv
+
+Elliott, Rothenberg & Stock (1996) test results for 1967q1 - 1981q4
+Variable name: ln_inv
+Ho: Unit root
+Ha: Stationarity
+GLS detrended data
+{txt}{hline 74}
+Criteria{col 12}Lags{col 20}ERS stat.{col 33}p-value{col 45}1% cv{col 57}5% cv{col 66} 10% cv
+{hline 74}
+{res}FIXED{col 13}11{col 18}   -2.765{col 31}    0.018{col 42}   -2.942{col 54}   -2.449{col 65}   -2.210
+  AIC{col 13}4{col 18}   -3.753{col 31}    0.010{col 42}   -3.760{col 54}   -3.091{col 65}   -2.761
+  SIC{col 13}4{col 18}   -3.753{col 31}    0.007{col 42}   -3.607{col 54}   -2.914{col 65}   -2.587
+GTS05{col 13}4{col 18}   -3.753{col 31}    0.010{col 42}   -3.747{col 54}   -3.129{col 65}   -2.817
+GTS10{col 13}4{col 18}   -3.753{col 31}    0.009{col 42}   -3.711{col 54}   -3.088{col 65}   -2.786
+{txt}{hline 74}
+KPSS: ln_inv
+ 
+KPSS test for ln_inv
+ 
+Automatic bandwidth selection (maxlag) = 6
+Autocovariances weighted by Bartlett kernel
+ 
+Critical values for H0: ln_inv is trend stationary
+ 
+10%: 0.119  5% : 0.146  2.5%: 0.176  1% : 0.216
+ 
+Lag order    Test statistic
+{col 4} 6{col 13}   .0734
+
+{com}. 
+. 
+. cap log close
+{smcl}
+{com}{sf}{ul off}
